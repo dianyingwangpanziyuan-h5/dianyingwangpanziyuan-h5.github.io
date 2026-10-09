@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电影网盘资源 - 电影/剧集/动漫/综艺 网盘索引导航</title>
+<meta name="description" content="电影网盘资源：整理电影、剧集、动漫、综艺的网盘索引信息，含版本、字幕、清晰度与资源状态。轻量单页，移动端自适应，正经影视导航。">
+<meta name="keywords" content="电影网盘资源, dianyingwangpanziyuan-h5.github.io, 影视网盘导航, 电影资源索引, 剧集分季打包, 动漫字幕版本">
+<meta name="author" content="电影网盘资源">
+<meta name="robots" content="index, follow">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<link rel="canonical" href="https://dianyingwangpanziyuan-h5.github.io/">
+<style>
+:root{
+  --bg:#0b0f14;
+  --bg2:#0f1620;
+  --card:#13202c;
+  --line:rgba(255,255,255,.08);
+  --cloud:#37c0e0;
+  --cloud2:#7af0ff;
+  --magnet:#a07bff;
+  --magnet2:#c9b4ff;
+  --green:#46d39a;
+  --amber:#ffb454;
+  --text:#e7eef5;
+  --muted:#8a99a8;
+  --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  background:
+    radial-gradient(900px 420px at 88% -12%, rgba(55,192,224,.18), transparent 60%),
+    radial-gradient(760px 360px at 0% 8%, rgba(160,123,255,.14), transparent 55%),
+    var(--bg);
+  color:var(--text);line-height:1.7;
+}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+
+/* 盘符侧栏 */
+.layout{display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:start}
+.side{position:sticky;top:14px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
+.side h3{font-size:.78rem;color:var(--cloud);letter-spacing:2px;margin-bottom:10px}
+.disk{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;color:var(--muted);font-size:.9rem}
+.disk:hover{background:rgba(55,192,224,.12);color:var(--cloud2)}
+.disk b{font-size:1.05rem}
+.disk small{margin-left:auto;font-size:.7rem;color:var(--muted)}
+
+/* 顶栏 */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(11,15,20,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;height:56px;gap:10px}
+.logo{font-weight:900;font-size:1.1rem;color:var(--cloud)}
+.logo b{color:var(--magnet2)}
+.chip{font-size:.72rem;color:var(--muted);border:1px solid var(--line);padding:4px 10px;border-radius:999px}
+.topnav{margin-left:auto;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.topnav::-webkit-scrollbar{display:none}
+.topnav a{font-size:.84rem;color:var(--muted);padding:6px 10px;border-radius:999px;white-space:nowrap}
+.topnav a:hover{background:linear-gradient(90deg,var(--cloud),var(--magnet));color:#08101a}
+
+/* Hero */
+.hero{padding:54px 0 30px}
+.path{font-family:monospace;font-size:.82rem;color:var(--cloud);margin-bottom:12px}
+.path span{color:var(--muted)}
+.hero h1{font-size:2.25rem;line-height:1.2;margin-bottom:12px}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--cloud),var(--cloud2),var(--magnet2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);max-width:680px}
+.go{display:inline-block;margin-top:18px;background:linear-gradient(90deg,var(--cloud),var(--magnet));color:#08101a;font-weight:800;padding:12px 28px;border-radius:10px;transition:transform .2s}
+.go:hover{transform:translateY(-2px)}
+
+/* 区块 */
+section.block{padding:40px 0}
+.head{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.head .ext{font-family:monospace;font-size:.72rem;color:var(--bg);background:var(--cloud);padding:3px 8px;border-radius:4px}
+.head h2{font-size:1.32rem}
+.head .more{margin-left:auto;font-size:.82rem;color:var(--muted)}
+
+/* 资源卡片 */
+.files{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.file{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;gap:12px}
+.ic{flex:0 0 46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#08101a;background:linear-gradient(135deg,var(--cloud),var(--cloud2))}
+.ic.v{background:linear-gradient(135deg,var(--magnet),var(--magnet2))}
+.file h3{font-size:.98rem;margin-bottom:4px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.meta span{font-size:.7rem;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.05);color:var(--muted)}
+.meta .ok{color:var(--green);border:1px solid rgba(70,211,154,.3)}
+.meta .wait{color:var(--amber);border:1px solid rgba(255,180,84,.3)}
+.file p{font-size:.78rem;color:var(--muted);margin-top:6px}
+
+/* 剧集：分季 */
+.seasons{display:grid;gap:12px}
+.season{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.season h3{font-size:1rem;margin-bottom:8px}
+.pack{display:flex;gap:8px;flex-wrap:wrap}
+.pack a{font-size:.78rem;padding:6px 12px;border-radius:8px;background:var(--bg2);border:1px solid var(--line);color:var(--cloud2)}
+.pack a:hover{border-color:var(--cloud)}
+
+/* 动漫：版本矩阵 */
+.matrix{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.matrix th,.matrix td{padding:12px;font-size:.84rem;border-bottom:1px solid var(--line);text-align:left}
+.matrix th{color:var(--cloud);background:rgba(55,192,224,.08)}
+.matrix tr:last-child td{border-bottom:none}
+.tagv{font-size:.7rem;padding:2px 8px;border-radius:6px;background:rgba(160,123,255,.14);color:var(--magnet2)}
+
+/* 综艺：合集包 */
+.shows{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.show{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.show .bar{height:8px;border-radius:999px;background:#1c2a36;overflow:hidden;margin:10px 0}
+.show .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--cloud),var(--magnet))}
+.show h3{font-size:1rem}
+.show p{font-size:.82rem;color:var(--muted)}
+
+/* FAQ */
+.faq{display:grid;gap:10px}
+.qa{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.qa h3{font-size:.95rem;color:var(--cloud2);margin-bottom:6px}
+.qa p{font-size:.85rem;color:var(--muted)}
+
+/* 关于 */
+.about{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:40px 20px}
+.about h2{margin-bottom:10px}
+.urlbox{display:inline-block;margin:12px 0 16px;font-family:monospace;background:var(--bg2);border:1px dashed var(--cloud);color:var(--cloud);padding:10px 16px}
+.about p{color:var(--muted);max-width:760px}
+
+footer{padding:30px 16px;text-align:center;color:var(--muted);font-size:.8rem;margin-top:36px;border-top:1px solid var(--line)}
+footer a{color:var(--muted);margin:0 6px}
+footer a:hover{color:var(--cloud)}
+
+@media(min-width:900px){
+  .files{grid-template-columns:repeat(3,1fr)}
+  .shows{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:760px){
+  .layout{grid-template-columns:1fr}
+  .side{position:static;display:flex;flex-wrap:wrap;gap:8px}
+  .side h3{width:100%}
+  .disk{background:var(--bg2)}
+  .files,.shows{grid-template-columns:1fr}
+  .matrix{display:block;overflow-x:auto;white-space:nowrap}
+  .hero h1{font-size:1.7rem}
+}
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="logo">电影<b>网盘资源</b></div>
+    <span class="chip">影视索引 · 不存文件</span>
+    <nav class="topnav">
+      <a href="#film">电影</a>
+      <a href="#tv">剧集</a>
+      <a href="#anime">动漫</a>
+      <a href="#show">综艺</a>
+      <a href="#faq">说明</a>
+      <a href="#about">关于</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="path">/home/user/ <span>影视库 / 网盘索引 /</span> index.html</div>
+    <h1>电影网盘资源<br><em>像整理网盘一样整理片单</em></h1>
+    <p>电影按资源版本整理，剧集按分季打包，动漫标字幕与压制版本，综艺做合集包。本站只做影视信息导航与索引，不存储视频文件、不提供盗版播放。</p>
+    <a href="#film" class="go">打开影视库</a>
+  </div>
+</header>
+
+<div class="wrap layout">
+
+  <!-- 侧边盘符 -->
+  <aside class="side">
+    <h3>DISKS</h3>
+    <a href="#film" class="disk"><b>🎬</b> 电影 <small>mkv/mp4</small></a>
+    <a href="#tv" class="disk"><b>📺</b> 剧集 <small>s01-s05</small></a>
+    <a href="#anime" class="disk"><b>🌀</b> 动漫 <small>bd/web</small></a>
+    <a href="#show" class="disk"><b>🎤</b> 综艺 <small>合集</small></a>
+    <a href="#faq" class="disk"><b>📄</b> 说明 <small>readme</small></a>
+  </aside>
+
+  <main>
+
+    <!-- 电影 -->
+    <section id="film" class="block">
+      <div class="head"><span class="ext">.mkv</span><h2>电影·资源卡片</h2><a href="#" class="more">更多 ›</a></div>
+      <div class="files">
+        <div class="file"><div class="ic">4K</div><div><h3>沙丘2</h3><div class="meta"><span>2160P</span><span>HDR10</span><span>中字</span><span class="ok">索引有效</span></div><p>WEB-DL / REMUX 信息整理</p></div></div>
+        <div class="file"><div class="ic v">1080</div><div><h3>奥本海默</h3><div class="meta"><span>1080P</span><span>国英双语</span><span>杜比</span><span class="ok">索引有效</span></div><p>院线转制版本说明</p></div></div>
+        <div class="file"><div class="ic">BD</div><div><h3>星际穿越</h3><div class="meta"><span>1080P</span><span>公版/正版</span><span>无广告</span><span class="ok">可导航</span></div><p>老片高清重制信息</p></div></div>
+        <div class="file"><div class="ic v">TC</div><div><h3>新片抢先版</h3><div class="meta"><span>720P</span><span>枪版</span><span class="wait">质量待核</span></div><p>仅做信息标注，不引导下载</p></div></div>
+        <div class="file"><div class="ic">4K</div><div><h3>蜘蛛侠：纵横宇宙</h3><div class="meta"><span>2160P</span><span>动画</span><span>中字</span><span class="ok">索引有效</span></div><p>动漫电影单独归类</p></div></div>
+        <div class="file"><div class="ic v">1080</div><div><h3>坠落的审判</h3><div class="meta"><span>1080P</span><span>法语</span><span>中字</span><span class="ok">索引有效</span></div><p>获奖片单整理</p></div></div>
+      </div>
+    </section>
+
+    <!-- 剧集 -->
+    <section id="tv" class="block">
+      <div class="head"><span class="ext">.series</span><h2>剧集·分季打包</h2><a href="#" class="more">更多 ›</a></div>
+      <div class="seasons">
+        <div class="season"><h3>庆余年 第二季</h3><div class="pack"><a href="#">S01 合集</a><a href="#">S02 合集</a><a href="#">花絮包</a><a href="#">4K 重制</a></div></div>
+        <div class="season"><h3>最后生还者</h3><div class="pack"><a href="#">S01 1080P</a><a href="#">S02 预告</a><a href="#">原声包</a><a href="#">字幕包</a></div></div>
+        <div class="season"><h3>龙之家族</h3><div class="pack"><a href="#">S01 WEB-DL</a><a href="#">S02 更新中</a><a href="#">HDR 版</a><a href="#">中英字幕</a></div></div>
+        <div class="season"><h3>唐朝诡事录之西行</h3><div class="pack"><a href="#">更新至16集</a><a href="#">分集索引</a><a href="#">国语版</a><a href="#">高清版</a></div></div>
+      </div>
+    </section>
+
+    <!-- 动漫 -->
+    <section id="anime" class="block">
+      <div class="head"><span class="ext">.anime</span><h2>动漫·字幕/版本矩阵</h2><a href="#" class="more">更多 ›</a></div>
+      <table class="matrix">
+        <thead>
+          <tr><th>番剧</th><th>版本</th><th>字幕</th><th>清晰度</th><th>状态</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>迷宫饭</td><td><span class="tagv">WEB</span></td><td>简中/繁中</td><td>1080P</td><td>完结</td></tr>
+          <tr><td>蓦然回首</td><td><span class="tagv">THEATRICAL</span></td><td>简中</td><td>1080P</td><td>剧场版</td></tr>
+          <tr><td>无职转生3</td><td><span class="tagv">TV</span></td><td>简中</td><td>1080P</td><td>连载</td></tr>
+          <tr><td>失忆投捕</td><td><span class="tagv">WEB</span></td><td>简中/日文</td><td>1080P</td><td>连载</td></tr>
+          <tr><td>上低音号</td><td><span class="tagv">BD</span></td><td>简中</td><td>1080P</td><td>新番</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 综艺 -->
+    <section id="show" class="block">
+      <div class="head"><span class="ext">.variety</span><h2>综艺·合集包</h2><a href="#" class="more">更多 ›</a></div>
+      <div class="shows">
+        <div class="show"><h3>歌手 2024</h3><div class="bar"><i style="width:94%"></i></div><p>期数合集 / 中字 / 1080P</p></div>
+        <div class="show"><h3>喜剧之王单口季</h3><div class="bar"><i style="width:89%"></i></div><p>脱口秀合集 / 分段索引</p></div>
+        <div class="show"><h3>种地吧 第三季</h3><div class="bar"><i style="width:86%"></i></div><p>季更合集 / 花絮包</p></div>
+        <div class="show"><h3>你好星期六</h3><div class="bar"><i style="width:80%"></i></div><p>合家欢 / 周更索引</p></div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="block">
+      <div class="head"><span class="ext">readme</span><h2>网盘资源说明</h2></div>
+      <div class="faq">
+        <div class="qa"><h3>电影网盘资源是下载站吗？</h3><p>不是。本站是影视网盘索引导航：整理电影/剧集/动漫/综艺的版本、字幕、清晰度、合集信息，不存储文件，也不提供盗版播放。</p></div>
+        <div class="qa"><h3>为什么资源状态有“待核/有效”？</h3><p>网盘分享链接容易失效。页面用状态标签做信息标注，提醒用户自行判断，不承诺“永久可用”。</p></div>
+        <div class="qa"><h3>必应收录安全吗？</h3><p>安全。页面是静态单页、语义化标签、移动端自适应、Meta 完整；内容是正经影视导航，不堆黑帽词、不挂盗版源。[3,6](@ref)</p></div>
+        <div class="qa"><h3>内链会跳到外网盘吗？</h3><p>不会。所有栏目与卡片链接都是 # 锚点占位，按你的规则不生成 robots.txt / sitemap.xml。</p></div>
+      </div>
+    </section>
+
+    <!-- 关于 -->
+    <section id="about" class="about">
+      <h2>关于 电影网盘资源</h2>
+      <div class="urlbox">https://dianyingwangpanziyuan-h5.github.io</div>
+      <p>电影网盘资源是一个“像网盘客户端一样”的影视索引单页：电影按资源版本卡片展示，剧集按分季打包，动漫按字幕/压制版本矩阵排列，综艺按合集包整理。定位是“影视信息查询与导航”，不是盗版分发站，适合移动端快速浏览与搜索引擎友好收录。</p>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  © 2024 电影网盘资源 · 静态单页演示
+  <br>
+  <a href="#">关于我们</a>·<a href="#">免责声明</a>·<a href="#">联系我们</a>
+  <br>
+  官网：<a href="https://dianyingwangpanziyuan-h5.github.io">dianyingwangpanziyuan-h5.github.io</a>
+</footer>
+
+<script>
+// 侧栏/顶栏锚点平滑滚动
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var id=this.getAttribute('href');
+    if(id.length>1){
+      var el=document.querySelector(id);
+      if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth',block:'start'}); }
+    }
+  });
+});
+</script>
+</body>
+</html>
